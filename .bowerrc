@@ -1,0 +1,12 @@
+{
+  "directory": "frontend/web/assets/vendor/",
+  "color": true,
+  "timeout": 60000,
+  "save": true,
+  "interactive": true,
+  "scripts": {
+    "preinstall": "",
+    "postinstall": "",
+    "preuninstall": ""
+  }
+}
