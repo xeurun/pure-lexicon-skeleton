@@ -1,0 +1,36 @@
+version: '2'
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes_from:
+        - php
+    volumes:
+      - ./nginx/log:/var/log/nginx
+    links:
+      - php
+
+  php:
+    container_name: php
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/var/www/pure-lexicon-skeleton
+      - ./php/php-ini-overrides.ini:/etc/php5/fpm/conf.d/99-overrides.ini
+    links:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    ports:
+      - 3306:3306
+    environment:
+        MYSQL_ROOT_PASSWORD: 
