@@ -5,3 +5,8 @@ protected/runtime/*
 protected/data/*.db
 themes/classic/views/
 frontend/web/assets/vendor/*
+node_modules/*
+server.js
+*.sln
+*.config
+.idea

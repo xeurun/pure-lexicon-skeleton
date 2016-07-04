@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -9,138 +9,104 @@
     <script src="assets/vendor/angular-animate/angular-animate.js"></script>
     <script src="assets/vendor/angular-aria/angular-aria.js"></script>
     <script src="assets/vendor/angular-material/angular-material.js"></script>
+    <script src="assets/app.js"></script>
+    <script src="assets/controllers/dictionary.js"></script>
 </head>
 <body ng-app="pure-lexicon-skeleton">
-<div ng-controller="DictionaryController as ctrl" layout="column" ng-cloak class="md-inline-form">
-    <md-content layout-padding>
-        <form name="mainForm" ng-submit="$event.preventDefault()">
-            <div layout-gt-sm="row">
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Слово</label>
-                    <input ng-model="word" required>
-                </md-input-container>
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Вес</label>
-                    <input ng-model="size" placeholder="12345"
-                           required ng-pattern="/^[0-9]{5}$/" md-maxlength="5">
-                </md-input-container>
+    <div ng-controller="DictionaryController as ctrl" layout="column" ng-cloak class="md-inline-form">
+        <md-content layout-padding>
+            <form name="mainForm" ng-submit="$event.preventDefault()">
+                <md-autocomplete ng-disabled="ctrl.isDisabled" md-no-cache="ctrl.noCache" md-selected-item="ctrl.selectedItem" md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                 md-search-text="ctrl.searchText" md-selected-item-change="ctrl.selectPhrase(item)" md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                 md-item-text="item.text" md-min-length="0" placeholder="поиск/фильтр" md-menu-class="autocomplete-custom-template">
+                    <md-item-template>
+                        <span class="item-title">
+                            <md-icon md-svg-icon="assets/images/dictionary.svg"></md-icon>
+                            <span> {{item.text}} </span>
+                        </span>
+                        <span class="item-metadata">
+                            <span class="item-metastat">
+                                – Альтернатив: <strong>{{item.altcount}}</strong>
+                            </span>
+                            <span class="item-metastat">
+                                Сокральность: <strong>{{item.rating}}</strong>
+                            </span>
+                        </span>
+                    </md-item-template>
+                </md-autocomplete>
+            </form>
+        </md-content>
+        <md-content layout="column" layout-padding>
+            <div layout="column">
+                <div>
+                    <md-toolbar layout="row" class="md-hue-3">
+                        <div class="md-toolbar-tools">
+                            <span>Слова, словосочетания, выражения</span>
+                        </div>
+                    </md-toolbar>
+                    <md-content>
+                        <md-list class="md-dense" flex>
+                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.phrases" ng-click="ctrl.selectPhrase(item)">
+                                <md-divider></md-divider>
+                                <div layout="column" class="md-list-item-text">
+                                    <div layout="row">
+                                        <span ng-bind="item.text"></span>
+                                        <div align="right" flex>
+                                            <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-socrality" class="md-mini"></md-icon>
+                                            <strong>{{item.rating}}</strong>
+                                            <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-socrality" class="md-mini"></md-icon>
+                                        </div>
+                                    </div>
+
+                                    <div ng-if="ctrl.selectedPhrase == item">
+                                        <md-toolbar layout="row" class="md-hue-2">
+                                            <div class="md-toolbar-tools">
+                                                <span>Использование <strong>{{item.text}}</strong></span>
+                                            </div>
+                                        </md-toolbar>
+                                        <md-list class="md-dense" flex>
+                                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.descriptions" ng-click="null">
+                                                <md-divider></md-divider>
+                                                <div class="md-list-item-text">
+                                                    <div layout="row">
+                                                        <span ng-bind-html="item.text" flex></span>
+                                                        <div flex="nogrow">
+                                                            <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-rating" ng-click="ctrl.incrementRating(item)"></md-icon>
+                                                            <strong>{{item.rating}}</strong>
+                                                            <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-rating" class="md-mini"></md-icon>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </md-list-item>
+                                        </md-list>
+                                        <md-toolbar layout="row" class="md-hue-5">
+                                            <div class="md-toolbar-tools">
+                                                <span>Альтернативы для <strong>{{ctrl.selectedPhrase.text}}</strong></span>
+                                            </div>
+                                        </md-toolbar>
+                                        <md-list class="md-dense" flex>
+                                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.alternatives" ng-click="null">
+                                                <md-divider></md-divider>
+                                                <div class="md-list-item-text">
+                                                    <div layout="row">
+                                                        <span ng-bind="item.text" flex></span>
+                                                        <div flex="nogrow">
+                                                            <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-rating" ng-click="ctrl.incrementRating($event, item)"></md-icon>
+                                                            <strong>{{item.rating}}</strong>
+                                                            <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-rating" class="md-mini" ng-click="ctrl.decrementRating($event, item)"></md-icon>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </md-list-item>
+                                        </md-list>
+                                    </div>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </md-content>
+                </div>
             </div>
-            <md-autocomplete
-                    ng-disabled="ctrl.isDisabled"
-                    md-no-cache="ctrl.noCache"
-                    md-selected-item="ctrl.selectedItem"
-                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
-                    md-search-text="ctrl.searchText"
-                    md-selected-item-change="ctrl.selectedItemChange(item)"
-                    md-items="item in ctrl.querySearch(ctrl.searchText)"
-                    md-item-text="item.name"
-                    md-min-length="0"
-                    placeholder="Выбери слово для замены"
-                    md-menu-class="autocomplete-custom-template">
-                <md-item-template>
-                          <span class="item-title">
-                            <md-icon md-svg-icon="assets/images/test.svg"></md-icon>
-                            <span> {{item.name}} </span>
-                          </span>
-                          <span class="item-metadata">
-                            <span class="item-metastat">
-                              <strong>{{item.size}}</strong> вес
-                            </span>
-                            <span class="item-metastat">
-                              <strong>{{item.rating}}</strong> рейтинг
-                            </span>
-                          </span>
-                </md-item-template>
-            </md-autocomplete>
-        </form>
-    </md-content>
-    <md-list-item class="md-3-line" ng-repeat="item in todos" ng-click="null">
-        <img ng-src="assets/images/dictionary.svg?{{$index}}" class="md-avatar" alt="Вариант" />
-        <div class="md-list-item-text" layout="column">
-            <h3>{{ item.word }} - {{ item.change }} - {{ item.size }}</h3>
-        </div>
-    </md-list-item>
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-        <md-button class="md-fab md-primary" aria-label="Добавить">
-        </md-button>
-    </section>
-</div>
-<script>
-    angular.module('pure-lexicon-skeleton', ['ngMaterial'])
-            .controller('DictionaryController', function ($scope, $log) {
-                $scope.size = 0;
-                $scope.word = '';
-                $scope.todos = [{
-                    'word': 'Язь',
-                    'change': 'Есть',
-                    'size': 5
-                }];
-
-                var self 		= this;
-                self.simulateQuery 	= false;
-                self.isDisabled    	= false;
-                self.repos         	= loadAll();
-                self.querySearch   	= querySearch;
-                self.selectedItemChange = selectedItemChange;
-                self.searchTextChange   = searchTextChange;
-
-                // ******************************
-                // Internal methods
-                // ******************************
-
-                /**
-                 * Search for repos... use $timeout to simulate
-                 * remote dataservice call.
-                 */
-                function querySearch (query) {
-                    var results = query ? self.repos.filter( createFilterFor(query) ) : self.repos,
-                            deferred;
-                    if (self.simulateQuery) {
-                        deferred = $q.defer();
-                        $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
-                        return deferred.promise;
-                    } else {
-                        return results;
-                    }
-                }
-
-                function searchTextChange(text) {
-                    $log.info('Text changed to ' + text);
-                }
-
-                function selectedItemChange(item) {
-                    $log.info('Item changed to ' + JSON.stringify(item));
-                }
-
-                /**
-                 * Build `components` list of key/value pairs
-                 */
-                function loadAll() {
-                    var repos = [
-                        {
-                            'name'      : 'Грация',
-                            'url'       : 'http://purecon.tk/',
-                            'size'      : '3,623',
-                            'rating'    : '16,175'
-                        }
-                    ];
-
-                    return repos.map( function (repo) {
-                        repo.value = repo.name.toLowerCase();
-                        return repo;
-                    });
-                }
-
-                /**
-                 * Create filter function for a query string
-                 */
-                function createFilterFor(query) {
-                    var lowercaseQuery = angular.lowercase(query);
-                    return function filterFn(item) {
-                        return (item.value.indexOf(lowercaseQuery) === 0);
-                    };
-                }
-            });
-</script>
+        </md-content>
+    </div>
 </body>
 </html>

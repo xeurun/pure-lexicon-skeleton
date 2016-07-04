@@ -1,0 +1,1 @@
+angular.module('pure-lexicon-skeleton', ['ngMaterial']);
