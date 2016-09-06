@@ -1,0 +1,62 @@
+{
+    "name": "XeuRun/pure-lexicon-skeleton",
+    "description": "Skeleton api application for create any lexicon dictionary based applicaton",
+    "keywords": ["yii2", "rest", "lexicon", "api"],
+    "homepage": "https://github.com/XeuRun/pure-lexicon-skeleton",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Stepankov",
+            "email": "xeurun@yahoo.com",
+            "role": "Developer"
+        },
+        {
+            "name": "ApceH Hypocrite",
+            "email": "apcehypo@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/XeuRun/pure-lexicon-skeleton/issues",
+        "source": "https://github.com/XeuRun/pure-lexicon-skeleton"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0.0",
+        "yiisoft/yii2": "2.0.9",
+        "yiisoft/yii2-bootstrap": "2.0.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "yiisoft/yii2-debug": "*",
+        "yiisoft/yii2-gii": "*",
+        "yiisoft/yii2-faker": "*",
+        "symfony/var-dumper": "*"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+
+    "scripts": {
+        "post-create-project-cmd": [
+            "yii\\composer\\Installer::postCreateProject"
+        ]
+    },
+    "extra": {
+        "yii\\composer\\Installer::postCreateProject": {
+            "setPermission": [
+                {
+                    "backend/runtime": "0777",
+                    "frontend/runtime": "0777",
+                    "frontend/web/assets": "0777",
+                    "yii": "0755"
+                }
+            ]
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "frontend/web/assets/vendor"
+        }
+    }
+}

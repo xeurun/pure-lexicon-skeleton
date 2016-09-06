@@ -4,7 +4,7 @@
   "homepage": "https://github.com/XeuRun/pure-lexicon-skeleton",
   "authors": [
     "Alexey Stepankov <xeurun@yahoo.com>",
-    "ApceH Hypocrite <apcehypo@gmail.com>"
+    "ApceH Hypocrite <apcehypo@gmail.com>",
   ],
   "description": "Skeleton api application for create any lexicon dictionary based applicaton",
   "main": "app",
