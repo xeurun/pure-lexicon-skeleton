@@ -1,0 +1,9 @@
+.add-word-button {
+    position: fixed !important;
+    right: 32px;
+    bottom: 32px;
+}
+
+#addForm md-dialog, #showForm md-dialog {
+    min-width: 800px;
+}

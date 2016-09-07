@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>pure-lexicon-skeleton</title>
+    <link href="assets/css/app.css" rel="stylesheet">
     <link href="assets/vendor/angular/angular-csp.css" rel="stylesheet">
     <link href="assets/vendor/angular-material/angular-material.css" rel="stylesheet">
     <script src="assets/vendor/angular/angular.js"></script>
     <script src="assets/vendor/angular-animate/angular-animate.js"></script>
     <script src="assets/vendor/angular-aria/angular-aria.js"></script>
     <script src="assets/vendor/angular-material/angular-material.js"></script>
-    <script src="assets/app.js"></script>
-    <script src="assets/controllers/dictionary.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/services/ApiService.js"></script>
+    <script src="assets/js/controllers/MainController.js"></script>
 </head>
-<body ng-app="pure-lexicon-skeleton">
-    <div ng-controller="DictionaryController as ctrl" layout="column" ng-cloak class="md-inline-form">
+<body ng-app="pure-lexicon">
+    <div ng-controller="MainController as ctrl" layout="column" ng-cloak class="md-inline-form">
         <md-content layout-padding>
             <form name="mainForm" ng-submit="$event.preventDefault()">
                 <md-autocomplete ng-disabled="ctrl.isDisabled" md-no-cache="ctrl.noCache" md-selected-item="ctrl.selectedItem" md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
-                                 md-search-text="ctrl.searchText" md-selected-item-change="ctrl.selectPhrase(item)" md-items="item in ctrl.querySearch(ctrl.searchText)"
-                                 md-item-text="item.text" md-min-length="0" placeholder="поиск/фильтр" md-menu-class="autocomplete-custom-template">
+                                 md-search-text="ctrl.searchText" md-selected-item-change="ctrl.showShowForm($event, item)" md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                 md-item-text="item.title" md-min-length="0" placeholder="поиск/фильтр" md-menu-class="autocomplete-custom-template">
                     <md-item-template>
                         <span class="item-title">
                             <md-icon md-svg-icon="assets/images/dictionary.svg"></md-icon>
-                            <span> {{item.text}} </span>
+                            <span> {{item.title}} </span>
                         </span>
                         <span class="item-metadata">
                             <span class="item-metastat">
@@ -44,61 +46,18 @@
                             <span>Слова, словосочетания, выражения</span>
                         </div>
                     </md-toolbar>
-                    <md-content>
+                    <md-content ng-init="ctrl.loadPhrases()">
                         <md-list class="md-dense" flex>
-                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.phrases" ng-click="ctrl.selectPhrase(item)">
+                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.phrases" ng-click="ctrl.showShowForm($event, item)">
                                 <md-divider></md-divider>
-                                <div layout="column" class="md-list-item-text">
+                                <div class="md-list-item-text">
                                     <div layout="row">
-                                        <span ng-bind="item.text"></span>
-                                        <div align="right" flex>
-                                            <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-socrality" class="md-mini"></md-icon>
+                                        <span ng-bind="item.title" flex></span>
+                                        <div>
+                                            <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-socrality" class="md-mini" ng-click="ctrl.incrementRating($event, item)"></md-icon>
                                             <strong>{{item.rating}}</strong>
-                                            <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-socrality" class="md-mini"></md-icon>
+                                            <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-socrality" class="md-mini" ng-click="ctrl.decrementRating($event, item)"></md-icon>
                                         </div>
-                                    </div>
-
-                                    <div ng-if="ctrl.selectedPhrase == item">
-                                        <md-toolbar layout="row" class="md-hue-2">
-                                            <div class="md-toolbar-tools">
-                                                <span>Использование <strong>{{item.text}}</strong></span>
-                                            </div>
-                                        </md-toolbar>
-                                        <md-list class="md-dense" flex>
-                                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.descriptions" ng-click="null">
-                                                <md-divider></md-divider>
-                                                <div class="md-list-item-text">
-                                                    <div layout="row">
-                                                        <span ng-bind-html="item.text" flex></span>
-                                                        <div flex="nogrow">
-                                                            <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-rating" ng-click="ctrl.incrementRating(item)"></md-icon>
-                                                            <strong>{{item.rating}}</strong>
-                                                            <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-rating" class="md-mini"></md-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </md-list-item>
-                                        </md-list>
-                                        <md-toolbar layout="row" class="md-hue-5">
-                                            <div class="md-toolbar-tools">
-                                                <span>Альтернативы для <strong>{{ctrl.selectedPhrase.text}}</strong></span>
-                                            </div>
-                                        </md-toolbar>
-                                        <md-list class="md-dense" flex>
-                                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.alternatives" ng-click="null">
-                                                <md-divider></md-divider>
-                                                <div class="md-list-item-text">
-                                                    <div layout="row">
-                                                        <span ng-bind="item.text" flex></span>
-                                                        <div flex="nogrow">
-                                                            <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-rating" ng-click="ctrl.incrementRating($event, item)"></md-icon>
-                                                            <strong>{{item.rating}}</strong>
-                                                            <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-rating" class="md-mini" ng-click="ctrl.decrementRating($event, item)"></md-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </md-list-item>
-                                        </md-list>
                                     </div>
                                 </div>
                             </md-list-item>
@@ -107,6 +66,100 @@
                 </div>
             </div>
         </md-content>
+        <md-button class="md-fab add-word-button" ng-click="ctrl.showAddForm($event)" aria-label="Add word">
+            <md-icon md-svg-src="static/images/dictionary.svg"></md-icon>
+        </md-button>
+
+        <div style="visibility: hidden">
+            <div class="md-dialog-container" id="showForm">
+                <md-dialog aria-label="Show word">
+                    <form ng-cloak>
+                        <md-toolbar>
+                            <div class="md-toolbar-tools">
+                                <h2>{{ctrl.selectedPhrase.title}}</h2>
+                                <span flex></span>
+                                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                                    <md-icon md-svg-src="static/images/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                                </md-button>
+                            </div>
+                        </md-toolbar>
+                        <md-dialog-content>
+                            <div class="md-dialog-content">
+                                <md-toolbar layout="row" class="md-hue-5">
+                                    <div class="md-toolbar-tools">
+                                        <span>Использование</span>
+                                    </div>
+                                </md-toolbar>
+                                <md-content flex layout-padding>
+                                    <p>{{ ctrl.selectedPhrase.description }}</p>
+                                </md-content>
+                                <md-toolbar layout="row" class="md-hue-5">
+                                    <div class="md-toolbar-tools">
+                                        <span>Альтернативы</span>
+                                    </div>
+                                </md-toolbar>
+                                <md-list class="md-dense" flex>
+                                    <md-list-item class="md-2-line" ng-repeat="item in ctrl.selectedPhrase.alternatives">
+                                        <md-divider></md-divider>
+                                        <div class="md-list-item-text">
+                                            <div layout="row">
+                                                <span ng-bind="item.title" flex></span>
+                                                <div flex="nogrow">
+                                                    <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-rating" class="md-mini" ng-click="ctrl.incrementRating($event, item)"></md-icon>
+                                                    <strong>{{item.rating}}</strong>
+                                                    <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-rating" class="md-mini" ng-click="ctrl.decrementRating($event, item)"></md-icon>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </md-list-item>
+                                </md-list>
+                            </div>
+                        </md-dialog-content>
+                        <md-dialog-actions layout="row">
+                            <md-button ng-click="ctrl.cancel()">Cancel</md-button>
+                        </md-dialog-actions>
+                    </form>
+                </md-dialog>
+            </div>
+        </div>
+
+        <div style="visibility: hidden">
+            <div class="md-dialog-container" id="addForm">
+                <md-dialog aria-label="Add word">
+                    <form ng-cloak>
+                        <md-toolbar>
+                            <div class="md-toolbar-tools">
+                                <h2>Добавить слово</h2>
+                                <span flex></span>
+                                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                                    <md-icon md-svg-src="static/images/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                                </md-button>
+                            </div>
+                        </md-toolbar>
+                        <md-dialog-content>
+                            <div class="md-dialog-content">
+                                <md-input-container class="md-block">
+                                    <label>Слово</label>
+                                    <input ng-model="ctrl.newWord.title">
+                                </md-input-container>
+                                <md-input-container class="md-block">
+                                    <label>Описание</label>
+                                    <textarea ng-model="ctrl.newWord.description" rows="5" md-select-on-focus></textarea>
+                                </md-input-container>
+                                <md-input-container class="md-block">
+                                    <label>Слово для замены</label>
+                                    <input ng-model="ctrl.newWord.alternative">
+                                </md-input-container>
+                            </div>
+                        </md-dialog-content>
+                        <md-dialog-actions layout="row">
+                            <md-button ng-click="ctrl.cancel()">Отмена</md-button>
+                            <md-button ng-click="ctrl.save()">Сохранить</md-button>
+                        </md-dialog-actions>
+                    </form>
+                </md-dialog>
+            </div>
+        </div>
     </div>
 </body>
 </html>

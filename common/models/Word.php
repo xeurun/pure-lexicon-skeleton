@@ -2,8 +2,6 @@
 
 namespace common\models;
 
-use yii\behaviors\TimestampBehavior;
-
 /**
  * This is the model class for table "word".
  *
@@ -25,22 +23,24 @@ class Word extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['content'], 'required'],
-            [['content'], 'string', 'max' => 128],
+            ['title', 'required'],
+            ['altcount', 'integer', 'min' => 0],
+            ['bad_word', 'in', 'range' => [0, 1]],
+            ['rating', 'integer'],
+            ['title', 'string', 'max' => 128],
+            ['description', 'string'],
+            [['rating', 'altcount'], 'default', 'value' => 0],
+            [['bad_word'], 'default', 'value' => 1],
+            [['created_at', 'updated_at'], 'safe']
         ];
+    }
+    public function getAlternatives()
+    {
+        return $this->hasMany(Word::className(), ['id' => 'good_word_id'])
+            ->viaTable('words_alternatives', ['bad_word_id' => 'id']);
     }
 
     /**
@@ -49,8 +49,15 @@ class Word extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'        => 'ID',
-            'content'   => 'Content',
+            'id'            => 'ID',
+            'title'         => 'Title',
+            'description'   => 'Description',
+            'rating'        => 'Rating',
+            'altcount'      => 'Alternative count',
+            'bad_word'      => 'Bad word',
+            'created_at'    => 'Create date',
+            'updated_at'    => 'Update date',
+            'alternatives'  => 'Alternatives',
         ];
     }
 
@@ -58,10 +65,20 @@ class Word extends \yii\db\ActiveRecord
     {
         return [
             'id',
-            'content',
-            'created_at' => function () {
-                return date('d-m-y H:i', $this->created_at);
-            },
+            'title',
+            'description',
+            'rating',
+            'altcount',
+            'bad_word',
+            'created_at',
+            'updated_at',
+        ];
+    }
+
+    public function extraFields()
+    {
+        return [
+            'alternatives'
         ];
     }
 }
