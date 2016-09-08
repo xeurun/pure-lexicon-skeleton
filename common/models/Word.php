@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use yii\db\Query;
+
 /**
  * This is the model class for table "word".
  *
@@ -37,6 +39,10 @@ class Word extends \yii\db\ActiveRecord
             [['created_at', 'updated_at'], 'safe']
         ];
     }
+
+    /**
+     * @return Query
+     */
     public function getAlternatives()
     {
         return $this->hasMany(Word::className(), ['id' => 'good_word_id'])

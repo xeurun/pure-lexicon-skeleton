@@ -1,7 +1,7 @@
 (function() {
     "use strict";
 
-    function MainController($log, $sce, $mdDialog, ApiService) {
+    function MainController($log, $mdDialog, ApiService) {
         var self = this;
         self.simulateQuery = false;
         self.isDisabled = false;
@@ -15,8 +15,18 @@
         };
 
         self.save = function() {
-            ApiService.post('api/v1/frontend/json/word', self.newWord).then(function(data) {
-                self.phrases.push(data);
+            ApiService.post('api/v1/frontend/json/word?expand=alternatives', self.newWord).then(function(data) {
+                var isNew = true;
+                angular.forEach(self.phrases, function(phrase, id) {
+                    if (phrase.id === data.id) {
+                        isNew = false;
+                        self.phrases[id] = data;
+                    }
+                });
+
+                if (isNew) {
+                    self.phrases.push(data);
+                }
             });
             $mdDialog.hide();
         };

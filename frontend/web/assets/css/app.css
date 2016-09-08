@@ -7,3 +7,7 @@
 #addForm md-dialog, #showForm md-dialog {
     min-width: 800px;
 }
+
+.rating-counter {
+    z-index: 9999;
+}

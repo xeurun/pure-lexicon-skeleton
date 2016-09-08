@@ -57,7 +57,9 @@ class CreateAction extends \yii\rest\CreateAction
         $word->setAttribute('altcount', $word->altcount + 1);
         $word->load(Yii::$app->getRequest()->getBodyParams(), '');
         if ($word->save()) {
-            $word->link('alternatives', $alternativeWord);
+            if (!$word->getAlternatives()->filterWhere(['id' => $alternativeWord->getPrimaryKey()])->exists()) {
+                $word->link('alternatives', $alternativeWord);
+            }
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);
             $id = implode(',', array_values($word->getPrimaryKey(true)));

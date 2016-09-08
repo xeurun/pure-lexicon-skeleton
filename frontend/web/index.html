@@ -53,7 +53,7 @@
                                 <div class="md-list-item-text">
                                     <div layout="row">
                                         <span ng-bind="item.title" flex></span>
-                                        <div>
+                                        <div class="rating-counter" flex="nogrow">
                                             <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-socrality" class="md-mini" ng-click="ctrl.incrementRating($event, item)"></md-icon>
                                             <strong>{{item.rating}}</strong>
                                             <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-socrality" class="md-mini" ng-click="ctrl.decrementRating($event, item)"></md-icon>
@@ -104,7 +104,7 @@
                                         <div class="md-list-item-text">
                                             <div layout="row">
                                                 <span ng-bind="item.title" flex></span>
-                                                <div flex="nogrow">
+                                                <div class="rating-counter" flex="nogrow">
                                                     <md-icon md-svg-src="assets/images/thumb-up.svg" aria-label="incrase-rating" class="md-mini" ng-click="ctrl.incrementRating($event, item)"></md-icon>
                                                     <strong>{{item.rating}}</strong>
                                                     <md-icon md-svg-src="assets/images/thumb-down.svg" aria-label="decrase-rating" class="md-mini" ng-click="ctrl.decrementRating($event, item)"></md-icon>
@@ -125,7 +125,7 @@
 
         <div style="visibility: hidden">
             <div class="md-dialog-container" id="addForm">
-                <md-dialog aria-label="Add word">
+                <md-dialog aria-label="Добавить слово">
                     <form ng-cloak>
                         <md-toolbar>
                             <div class="md-toolbar-tools">

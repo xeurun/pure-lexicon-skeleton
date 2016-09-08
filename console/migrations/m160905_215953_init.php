@@ -15,7 +15,7 @@ class m160905_215953_init extends Migration
             'bad_word'      => 'TINYINT NOT NULL DEFAULT 1',
             'altcount'      => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL DEFAULT 0',
             'created_at'    => Schema::TYPE_TIMESTAMP . ' NOT NULL DEFAULT CURRENT_TIMESTAMP',
-            'updated_at'    => Schema::TYPE_TIMESTAMP . ' NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+            'updated_at'    => Schema::TYPE_TIMESTAMP,
         ], 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB');
 
         $this->createTable('words_alternatives', [
